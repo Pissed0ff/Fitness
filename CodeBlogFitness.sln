@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBlogFitness", "CodeBlogFitness\CodeBlogFitness.csproj", "{1C3F5B3B-7D9D-4A01-B9E5-7E2B56F77839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fitness", "CodeBlogFitness\Fitness.csproj", "{7252B3FB-3E5D-4AE1-97BC-FB3922EF6EA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessBL", "CodBlogFitness\FitnessBL.csproj", "{DA940592-F501-4CBF-9E17-7E41146716AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1C3F5B3B-7D9D-4A01-B9E5-7E2B56F77839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C3F5B3B-7D9D-4A01-B9E5-7E2B56F77839}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C3F5B3B-7D9D-4A01-B9E5-7E2B56F77839}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C3F5B3B-7D9D-4A01-B9E5-7E2B56F77839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7252B3FB-3E5D-4AE1-97BC-FB3922EF6EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7252B3FB-3E5D-4AE1-97BC-FB3922EF6EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7252B3FB-3E5D-4AE1-97BC-FB3922EF6EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7252B3FB-3E5D-4AE1-97BC-FB3922EF6EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA940592-F501-4CBF-9E17-7E41146716AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA940592-F501-4CBF-9E17-7E41146716AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA940592-F501-4CBF-9E17-7E41146716AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA940592-F501-4CBF-9E17-7E41146716AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
