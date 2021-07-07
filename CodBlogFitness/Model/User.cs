@@ -17,7 +17,20 @@ namespace FitnessBL.Model
         public DateTime BirthDate { get; private set; }
         public double Weight { get; set; }
         public double Height { get; set; }
+        public int Age { get
+            {
+                var someDate = DateTime.Now - BirthDate;
+                return 5;
+            } }
 
+        /// <summary>
+        /// Конструктор со всеми параметрами
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthDate"></param>
+        /// <param name="weight"></param>
+        /// <param name="height"></param>
         public User(string name,
                     Gender gender,
                     DateTime birthDate,
@@ -27,7 +40,7 @@ namespace FitnessBL.Model
             if (name == null)
                 throw new ArgumentNullException("Имя не может быть пустым",nameof(name));
 
-            if (Gender == null)
+            if (gender == null)
                 throw new ArgumentNullException("Пол не выбран", nameof(gender));
 
             if (birthDate < DateTime.Parse("01.01.1900") || birthDate> DateTime.Now)
@@ -46,9 +59,20 @@ namespace FitnessBL.Model
 
         }
 
+        /// <summary>
+        /// Конструктор с одним именем
+        /// </summary>
+        /// <returns></returns>
+        public User(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException("Имя не может быть пустым", nameof(name));
+            Name = name;
+        }
+
         public override string ToString()
         {
-            return Name;
+            return Name + "из базы";
         }
 
     }

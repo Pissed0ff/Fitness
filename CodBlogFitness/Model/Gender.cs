@@ -15,9 +15,10 @@ namespace FitnessBL.Model
         public value gender { get; private set; }
         public enum value
         {
-            male,
+            male=1,
             female,
         }
+
         public Gender()
         { }
         public Gender(value val)
