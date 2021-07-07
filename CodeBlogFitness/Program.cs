@@ -30,6 +30,7 @@ namespace Fitness
                 int.TryParse(strGender, out intGender);
                 Gender.value genderVal = (Gender.value)Enum.GetValues(typeof(Gender.value)).GetValue(intGender - 1);
                 Gender gender = new Gender(genderVal);
+
                 //ввод даты рождения
                 Console.WriteLine("Введите дату рождения");
                 string strBirthDate = Console.ReadLine();

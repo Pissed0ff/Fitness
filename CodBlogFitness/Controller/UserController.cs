@@ -22,7 +22,7 @@ namespace FitnessBL.Controller
         public bool Save()
         {
             if (Users == null)
-                throw new ArgumentNullException("Пользователь не должен быть равен нулю", nameof(Users));
+                throw new ArgumentNullException("Список пользователей не должен быть равен нулю", nameof(Users));
             var formatter = new BinaryFormatter();
             using ( var fs = new FileStream("user.dat", FileMode.OpenOrCreate) )
             {
@@ -38,9 +38,9 @@ namespace FitnessBL.Controller
         public List<User> GetUsers()
         {
             var formatter = new BinaryFormatter();
-            using (var fs = new FileStream("user.dat", FileMode.Open))
+            using (var fs = new FileStream("user.dat", FileMode.OpenOrCreate))
             {
-                if( formatter.Deserialize(fs) is List<User> users)
+                if(fs.Length > 0 && formatter.Deserialize(fs) is List<User> users)
                     return users;
                 else
                 {
@@ -62,7 +62,6 @@ namespace FitnessBL.Controller
                 CurrentUser = new User(name);
                 IsNewUser = true;
             }
-            
         }
 
         public void AddUserInformation(Gender gender,
