@@ -10,44 +10,59 @@ namespace Fitness
         {
             Console.WriteLine("Вас приветствует приложение");
 
+            var userController = UserSelect();
+            EatingController eatingController = new EatingController(userController.CurrentUser);
+            eatingController.AddFoodElem("кабачок", 101, 22, 63, 24);
+        }
+
+        public static UserController UserSelect()
+        {
             //ввод имени
             Console.WriteLine("Введите имя пользователя");
-            string name  = Console.ReadLine();
+            string name = Console.ReadLine();
 
             UserController controller = new UserController(name);
 
             if (controller.IsNewUser)
             {
                 //ввод гендера
-                Console.WriteLine("Выберети пол:");
-                string[] genderArr = new UserController().GetGenders();
-                for (int i = 0; i < genderArr.Length; i++)
+                bool condition = true;
+                int intGender = default;
+                while (condition)
                 {
-                    Console.WriteLine($"{i + 1}: {genderArr[i]}");
+                    Console.WriteLine("Выберети пол:");
+                    string[] genderArr = controller.GetGenders();
+                    for (int i = 0; i < genderArr.Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}: {genderArr[i]}");
+                    }
+                    string strGender = Console.ReadLine();
+                    if (int.TryParse(strGender, out intGender) && intGender <= genderArr.Length && intGender>0)
+                        condition = false;
+                    else Console.WriteLine("неверный формат номера");
                 }
-                string strGender = Console.ReadLine();
-                int intGender = 0;
-                int.TryParse(strGender, out intGender);
                 Gender.value genderVal = (Gender.value)Enum.GetValues(typeof(Gender.value)).GetValue(intGender - 1);
                 Gender gender = new Gender(genderVal);
 
                 //ввод даты рождения
-                Console.WriteLine("Введите дату рождения");
-                string strBirthDate = Console.ReadLine();
+                condition = true;
+                string strBirthDate;
                 DateTime birthDate = DateTime.MinValue;
-                DateTime.TryParse(strBirthDate, out birthDate);
+                while (condition)
+                {
+                    Console.WriteLine("Введите дату рождения");
+                    strBirthDate = Console.ReadLine();
+                    if (DateTime.TryParse(strBirthDate, out birthDate))
+                        condition = false;
+                    else
+                        Console.WriteLine("Неверный формат даты");
+                }
+
 
                 //ввод роста
-                Console.WriteLine("Введите свой рост");
-                string strHeight = Console.ReadLine();
-                int height = 0;
-                int.TryParse(strHeight, out height);
-
+                int height = GetInt("Введите рост"); 
                 //ввод веса
-                Console.WriteLine("Введите свой вес");
-                string strWeight = Console.ReadLine();
-                int weight = 0;
-                int.TryParse(strHeight, out weight);
+                int weight = GetInt("Введите вес");
 
                 controller.AddUserInformation(gender, birthDate, weight, height);
             }
@@ -55,8 +70,33 @@ namespace Fitness
             {
                 Console.WriteLine("О! я вас помню");
             }
+            return controller;
+        }
+
+        /// <summary>
+        /// Перевод из буквенного значения в числовой
+        /// </summary>
+        /// <param name="mes"></param>
+        /// <returns></returns>
+        public static int GetInt(string mes)
+        {
+            int x;
+            string str;
+            while(true)
+            {
+                Console.Write(mes+": ");
+                str = Console.ReadLine();
+                if (int.TryParse(str, out x))
+                {
+                    return x;
+                }
+                else Console.WriteLine("Неверный формат");  
+            }
+            
 
 
         }
+
+
     }
 }

@@ -9,45 +9,11 @@ using System.Threading.Tasks;
 
 namespace FitnessBL.Controller
 {
-    public class UserController
+    public class UserController: BaseController
     {
         public List<User> Users { get; }
         public User CurrentUser { get; private set; }
         public bool IsNewUser {get;} = false;
-
-        /// <summary>
-        /// Метод сохранения списка в файл
-        /// </summary>
-        /// <returns></returns>
-        public bool Save()
-        {
-            if (Users == null)
-                throw new ArgumentNullException("Список пользователей не должен быть равен нулю", nameof(Users));
-            var formatter = new BinaryFormatter();
-            using ( var fs = new FileStream("user.dat", FileMode.OpenOrCreate) )
-            {
-                formatter.Serialize(fs, Users);
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Получить сохраненный список пользователей
-        /// </summary>
-        /// <returns></returns>
-        public List<User> GetUsers()
-        {
-            var formatter = new BinaryFormatter();
-            using (var fs = new FileStream("user.dat", FileMode.OpenOrCreate))
-            {
-                if(fs.Length > 0 && formatter.Deserialize(fs) is List<User> users)
-                    return users;
-                else
-                {
-                    return new List<User>();
-                }
-            }
-        }
 
         /// <summary>
         /// Проверка на наличие пользователя в списке сохраненных
@@ -55,7 +21,7 @@ namespace FitnessBL.Controller
         /// <param name="name"></param>
         public UserController(string name)
         {
-            Users = GetUsers();
+            Users = Load<User>("user.dat");
             CurrentUser = Users.FirstOrDefault<User>(u => u.Name == name);
             if (CurrentUser == null)
             {
@@ -71,7 +37,7 @@ namespace FitnessBL.Controller
         {
             CurrentUser = new User(CurrentUser.Name, gender, birthDate, weight, height);
             Users.Add(CurrentUser);
-            if (Save())
+            if (Save<User>("user.dat",Users))
                 Console.WriteLine("Новый пользователь сохранен");
         }
         public UserController(string name,
