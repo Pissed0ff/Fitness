@@ -11,9 +11,10 @@ namespace FitnessBL.Controller
 {
     public class EatingController:BaseController
     {
-        private User User { get; }
+        private User User { get; set; }
         public List<Food> ListFood { get; set; }
         public List<Eating> ListEatings { get; set; }
+        private Eating CurrentEating { get; set; }
 
         /// <summary>
         /// Создание контроллера с пользователем, список продуктов загружается из XML.
@@ -23,6 +24,7 @@ namespace FitnessBL.Controller
         {
             User = user ?? throw new ArgumentNullException("Пользователь не должен быть равен null", nameof(user));
             ListFood = LoadXml();
+            ListEatings = LoadEatings();
         }
 
         /// <summary>
@@ -40,20 +42,31 @@ namespace FitnessBL.Controller
         }
 
         /// <summary>
-        /// Добавление приема пищи.
+        /// Добавление приема пищи. Возвращает frue если продукт есть в базе
         /// </summary>
         /// <param name="foodName"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
         public bool AddEating(string foodName, int quantity)
         {
-            var food = ListFood.FirstOrDefault(f => f.Name == foodName);
+            var food = GetFoodByName(foodName);
             if (food != null)
             {
-                Eating newEating = new Eating(User);
-                newEating.AddFood(food, quantity);
+                if(CurrentEating == null)
+                    CurrentEating = new Eating(User);
+                CurrentEating.AddFood(food, quantity);
                 return true; 
             }     
+            else return false;
+        }
+        public Food GetFoodByName(string foodName)
+        {
+            return ListFood.FirstOrDefault(f => f.Name == foodName);
+        }
+        public bool isFoodExist(string foodName)
+        {
+            if (GetFoodByName(foodName) != null)
+                return true;
             else return false;
         }
         
@@ -62,9 +75,10 @@ namespace FitnessBL.Controller
         /// </summary>
         /// <param name="eating"></param>
         /// <returns></returns>
-        public bool SaveEating(Eating eating)
+        public bool SaveEating()
         {
-            ListEatings.Add(eating);
+            ListEatings.Add(CurrentEating);
+            CurrentEating = null;
             Save<Eating>("eating.dat", ListEatings);
             return true;
         }
@@ -73,10 +87,9 @@ namespace FitnessBL.Controller
         /// Загрузка Приемов пищи из файла
         /// </summary>
         /// <returns></returns>
-        public bool LoadEatings()
+        public List<Eating> LoadEatings()
         {
-            ListEatings = Load<Eating>("eating.dat");
-            return true;
+            return Load<Eating>("eating.dat");
         }
 
         /// <summary>
@@ -94,5 +107,23 @@ namespace FitnessBL.Controller
         {
             return LoadXml<List<Food>>("eating.xml");
         }
+
+        public IEnumerable<Eating> GetUserEating()
+        {
+            var list = from e in ListEatings
+                       where (e.User.Name == User.Name)
+                       select e;
+            return list;
+        }
+        public string GetUserName()
+        {
+            return User.ToString();
+        }
+
+       public void ChangeUser(UserController uc)
+        {
+            User = uc.CurrentUser;
+        }
+
     }
 }

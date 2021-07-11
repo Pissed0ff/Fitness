@@ -11,7 +11,7 @@ namespace FitnessBL.Controller
 {
     public class UserController: BaseController
     {
-        public List<User> Users { get; }
+        private List<User> Users { get; }
         public User CurrentUser { get; private set; }
         public bool IsNewUser {get;} = false;
 

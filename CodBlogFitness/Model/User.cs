@@ -72,7 +72,7 @@ namespace FitnessBL.Model
 
         public override string ToString()
         {
-            return Name + "из базы";
+            return Name + " из базы";
         }
 
     }
