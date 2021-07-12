@@ -11,7 +11,7 @@ namespace FitnessBL.Controller
 {
     public class EatingController:BaseController
     {
-        private User User { get; set; }
+        
         public List<Food> ListFood { get; set; }
         public List<Eating> ListEatings { get; set; }
         private Eating CurrentEating { get; set; }
@@ -20,9 +20,9 @@ namespace FitnessBL.Controller
         /// Создание контроллера с пользователем, список продуктов загружается из XML.
         /// </summary>
         /// <param name="user"></param>
-        public EatingController(User user)
+        public EatingController(User user): base(user)
         {
-            User = user ?? throw new ArgumentNullException("Пользователь не должен быть равен null", nameof(user));
+            //User = user ?? throw new ArgumentNullException("Пользователь не должен быть равен null", nameof(user));
             ListFood = LoadXml();
             ListEatings = LoadEatings();
         }
@@ -120,9 +120,9 @@ namespace FitnessBL.Controller
             return User.ToString();
         }
 
-       public void ChangeUser(UserController uc)
+       public void ChangeUser(User user)
         {
-            User = uc.CurrentUser;
+            User = user;
         }
 
     }

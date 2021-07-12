@@ -1,6 +1,9 @@
 ﻿using System;
 using FitnessBL.Model;
 using FitnessBL.Controller;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Resources;
 
 namespace Fitness
 {
@@ -8,14 +11,16 @@ namespace Fitness
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Вас приветствует приложение");
-            //создали пользователя
+            var Culture = new CultureInfo("en-us");
+            var ResourceManager = new ResourceManager("Fitness.Languages.Messages",typeof(Program).Assembly);
+            Console.WriteLine(ResourceManager.GetString("AppHello",Culture));
+              //создали пользователя
             var userController = UserSelect();
 
             EatingController eatingController = new EatingController(userController.CurrentUser);
             while (true)
             {
-                MainMenu(eatingController);
+                MainMenu(eatingController, userController);
             }
 
 
@@ -104,54 +109,73 @@ namespace Fitness
 
         }
 
-        public static void MainMenu(EatingController eatingController)
+        public static void MainMenu(EatingController eatingController, UserController userController)
         {
+            //Создание словаря возможных функций
+            var actions = new Dictionary<int, ConsoleAction>();
+            actions.Add(1, new ConsoleAction("Добавить продукт", AddProductHandler));
+            actions.Add(2, new ConsoleAction("Добавить прием пищи", AddEatingHandler));
+            actions.Add(3, new ConsoleAction("Отобразить приемы пищи", ShowEatingsHandler));
+            actions.Add(4, new ConsoleAction("Сменить пользователя", ChangeUserHandler));
+
+            #region oldMenu
+            //Console.WriteLine("Доступные функции:");
+            //Console.WriteLine("1 - Добавить продукт:");
+            //Console.WriteLine("2 - Добавить прием пищи");
+            //Console.WriteLine("3 - Отобразить приемы пищи");
+            //Console.WriteLine("4 - Сменить пользователья");
+            //int action = GetInt("");
+            //switch (action)
+            //{
+            //    case 1:
+            //        {
+            //            while(true)
+            //                {
+            //                Console.WriteLine("Введите название продукта или \"Выход\" ");
+            //                string product = Console.ReadLine();
+            //                if (product != "Выход")
+            //                {
+            //                    if (eatingController.isFoodExist(product))
+            //                        Console.WriteLine("Такой продукт уже существует");
+            //                    else AddNewFood(eatingController, product);
+            //                }
+            //                else
+            //                    break;
+            //            }
+            //            break;
+            //        }
+            //    case 2:
+            //        {
+            //            string message = "Введите продукт";
+            //            bool isFirst = true;
+            //            while (AddProductToEating(eatingController, ref message, ref isFirst))
+            //            { }
+            //            break;
+            //        }
+            //    case 3:
+            //        {
+            //            ShowEatings(eatingController);
+            //            break;
+            //        }
+            //    case 4:
+            //        {
+            //            userController = UserSelect();
+            //            eatingController.ChangeUser(userController.CurrentUser);
+            //            break;
+            //        }
+            //}
+            #endregion
+
             Console.WriteLine("Доступные функции:");
-            Console.WriteLine("1 - Добавить продукт:");
-            Console.WriteLine("2 - Добавить прием пищи");
-            Console.WriteLine("3 - Отобразить приемы пищи");
-            Console.WriteLine("4 - Сменить пользователья");
-            int action = GetInt("");
-            switch (action)
+            foreach(var el in actions)
             {
-                case 1:
-                    {
-                        while(true)
-                            {
-                            Console.WriteLine("Введите название продукта или \"Выход\" ");
-                            string product = Console.ReadLine();
-                            if (product != "Выход")
-                            {
-                                if (eatingController.isFoodExist(product))
-                                    Console.WriteLine("Такой продукт уже существует");
-                                else AddNewFood(eatingController, product);
-                            }
-                            else
-                                break;
-                        }
-                        break;
-                    }
-                case 2:
-                    {
-                        string message = "Введите продукт";
-                        bool isFirst = true;
-                        while (AddProductToEating(eatingController, ref message, ref isFirst))
-                        { }
-                        break;
-                    }
-                case 3:
-                    {
-                        ShowEatings(eatingController);
-                        break;
-                    }
-                case 4:
-                    {
-                        var newUserController = UserSelect();
-                        eatingController.ChangeUser(newUserController);
-                        break;
-                    }
+                Console.WriteLine(el.Key + " - " + el.Value.Name);
             }
+            string result = Console.ReadLine();
+            int action = GetInt(result);
+            actions[action].Action.Invoke(eatingController, userController);
         }
+
 
         public static bool AddProductToEating(EatingController ec, ref string message, ref bool isFirst)
         {
@@ -196,6 +220,39 @@ namespace Fitness
             int prots = GetInt("Введите кол-во белков на 100г");
             int carbs = GetInt("Введите кол-во углеводов на 100г");
             ec.AddFoodElem(product, calls, fats, prots, carbs);
+        }
+        public static void AddProductHandler(EatingController eatingController, UserController userController)
+        {
+            while (true)
+            {
+                Console.WriteLine("Введите название продукта или \"Выход\" ");
+                string product = Console.ReadLine();
+                if (product != "Выход")
+                {
+                    if (eatingController.isFoodExist(product))
+                        Console.WriteLine("Такой продукт уже существует");
+                    else AddNewFood(eatingController, product);
+                }
+                else
+                    break;
+            }
+        }
+
+        public static void AddEatingHandler(EatingController eatingController, UserController userController)
+        {
+            string message = "Введите продукт";
+            bool isFirst = true;
+            while (AddProductToEating(eatingController, ref message, ref isFirst))
+            { }
+        }
+        public static void ShowEatingsHandler(EatingController eatingController, UserController userController)
+        {
+            ShowEatings(eatingController);
+        }
+        public static void ChangeUserHandler(EatingController eatingController, UserController userController)
+        {
+            userController = UserSelect();
+            eatingController.ChangeUser(userController.CurrentUser);
         }
     }
 }

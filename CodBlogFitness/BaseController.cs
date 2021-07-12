@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FitnessBL.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,9 +9,23 @@ using System.Xml.Serialization;
 
 namespace FitnessBL
 {
-    [Serializable]
+
     public abstract class BaseController
     {
+        public User User { get; set; }
+
+        public BaseController(User user)
+        {
+            User = user ?? throw new ArgumentNullException("Пользователь не должен быть равен null", nameof(user));
+        }
+        public User GetUser()
+            {
+            return User;
+            }
+        public User SetUser()
+        {
+            User = ;
+        }
         public bool Save<T>(string fileName, List<T> obj)
         {
             var Formatter = new BinaryFormatter();
@@ -30,7 +45,6 @@ namespace FitnessBL
                 else return new List<T>();
             }
         }
-
         public void SaveXml<T>(string fileName, T obj)
         {
             var formatter = new XmlSerializer(typeof(T));
@@ -40,7 +54,6 @@ namespace FitnessBL
                 Console.WriteLine("Saved successfully");
             }
         }
-
         public T LoadXml<T>(string fileName)
         {
             var formatter = new XmlSerializer(typeof(T));
