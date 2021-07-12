@@ -11,8 +11,8 @@ namespace FitnessBL.Controller
 {
     public class UserController: BaseController
     {
+        public const string File_User_Name = "user.dat";
         private List<User> Users { get; }
-        public User CurrentUser { get; private set; }
         public bool IsNewUser {get;} = false;
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace FitnessBL.Controller
         /// <param name="name"></param>
         public UserController(string name)
         {
-            Users = Load<User>("user.dat");
+            Users = Load<User>(File_User_Name);
             CurrentUser = Users.FirstOrDefault<User>(u => u.Name == name);
             if (CurrentUser == null)
             {
@@ -29,7 +29,6 @@ namespace FitnessBL.Controller
                 IsNewUser = true;
             }
         }
-
         public void AddUserInformation(Gender gender,
                                        DateTime birthDate,
                                        double weight,
@@ -37,7 +36,7 @@ namespace FitnessBL.Controller
         {
             CurrentUser = new User(CurrentUser.Name, gender, birthDate, weight, height);
             Users.Add(CurrentUser);
-            if (Save<User>("user.dat",Users))
+            if (Save<User>(File_User_Name, Users))
                 Console.WriteLine("Новый пользователь сохранен");
         }
         public UserController(string name,

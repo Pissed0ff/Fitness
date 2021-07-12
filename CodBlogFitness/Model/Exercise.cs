@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 namespace FitnessBL.Model
 {
     [Serializable]
-    public class Exercise
+    public class Exercise : BaseActions
     {
         DateTime Start { get;  }
         DateTime End { get;  }
-        User User { get;  }
         Activity Activity { get; }
 
-        public Exercise(DateTime start, DateTime end, User user, Activity activity)
+        public Exercise(DateTime start, DateTime end, User user, Activity activity):base(user)
         {
             Start = start;
             End = end;
-            User = user;
             Activity = activity;
         }
 

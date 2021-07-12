@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 namespace FitnessBL.Model
 {
     [Serializable]
-    public class Food
+    public class Food: BaseElement
     {
         // PHG - Per Hundred Gramms
-        public string Name { get; set; }
         public double CalloriesPHG { get; set; }
         public double Callories { get; set; }
         public double FatsPHG { get; set; }

@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 namespace FitnessBL.Model
 {
     [Serializable]
-    public class Activity:BaseElement
+    abstract public class BaseActions
     {
-        public int CalliriesPerMinut { get; set; }
-         public Activity(string name, int calls):base(name)
+        public User User { get; set; }
+
+        public BaseActions(User user)
         {
-            CalliriesPerMinut = calls;
+            User = user;
         }
+        public BaseActions()
+        { }
     }
 }

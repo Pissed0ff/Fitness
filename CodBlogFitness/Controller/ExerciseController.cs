@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace FitnessBL.Controller
 {
-    public class ExerciseController : BaseController
+    
+
+    public class ExerciseController : BaseActionsController<Activity,Exercise>
     {
+        public const string File_Activity_Name = "activity.xml";
+        public const string File_Exercise_Name = "exercise.dat";
         private User User { get; }
         public List<Exercise> ListExercises{get; private set ;}
         public List<Activity> ListActivities { get; private set; }
-
-
-
-        public ExerciseController(User user)
-        {
-            User = User ?? throw new ArgumentNullException(nameof(user));
-
-        }
+        public ExerciseController(User user) : base(user, File_Activity_Name, File_Exercise_Name)
+        {}
     }
 }

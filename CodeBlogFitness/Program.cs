@@ -171,8 +171,7 @@ namespace Fitness
             {
                 Console.WriteLine(el.Key + " - " + el.Value.Name);
             }
-            string result = Console.ReadLine();
-            int action = GetInt(result);
+            int action = GetInt("Выберите действие");
             actions[action].Action.Invoke(eatingController, userController);
         }
 

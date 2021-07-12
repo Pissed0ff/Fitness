@@ -12,20 +12,9 @@ namespace FitnessBL
 
     public abstract class BaseController
     {
-        public User User { get; set; }
+        public User CurrentUser { get; protected set; }
 
-        public BaseController(User user)
-        {
-            User = user ?? throw new ArgumentNullException("Пользователь не должен быть равен null", nameof(user));
-        }
-        public User GetUser()
-            {
-            return User;
-            }
-        public User SetUser()
-        {
-            User = ;
-        }
+        public BaseController() { }
         public bool Save<T>(string fileName, List<T> obj)
         {
             var Formatter = new BinaryFormatter();
@@ -45,23 +34,23 @@ namespace FitnessBL
                 else return new List<T>();
             }
         }
-        public void SaveXml<T>(string fileName, T obj)
+        public void SaveXml<T>(string fileName, List<T> obj)
         {
-            var formatter = new XmlSerializer(typeof(T));
+            var formatter = new XmlSerializer(typeof(List<T>));
             using (var fs = new FileStream(fileName, FileMode.Create))
             {
                 formatter.Serialize(fs, obj);
                 Console.WriteLine("Saved successfully");
             }
         }
-        public T LoadXml<T>(string fileName)
+        public List<T> LoadXml<T>(string fileName)
         {
-            var formatter = new XmlSerializer(typeof(T));
+            var formatter = new XmlSerializer(typeof(List<T>));
             using (var fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                if (fs.Length > 0 && formatter.Deserialize(fs) is T obj)
+                if (fs.Length > 0 && formatter.Deserialize(fs) is List<T> obj)
                     return obj;
-                else return default;
+                else return new List<T>();
             }
         }
 
