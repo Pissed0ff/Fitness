@@ -11,10 +11,6 @@ namespace FitnessBL.Controller
 {
     public class EatingController:BaseActionsController<Food,Eating>
     {
-
-        //public List<Food> ListFood { get; set; }
-        //public List<Eating> ListEatings { get; set; }
-        //private Eating CurrentEating { get; set; }
         private const string File_Food_Name = "food.xml";
         private const string File_Eating_Name = "eating.dat";
 
@@ -57,10 +53,22 @@ namespace FitnessBL.Controller
             }     
             else return false;
         }
+
+        /// <summary>
+        /// Возвращает продукт по запращиваемому имени
+        /// </summary>
+        /// <param name="foodName"></param>
+        /// <returns></returns>
         public Food GetFoodByName(string foodName)
         {
             return GetElemByName(foodName);
         }
+
+        /// <summary>
+        /// Проверяет существует ли продукт с данным именем в базе
+        /// </summary>
+        /// <param name="foodName"></param>
+        /// <returns></returns>
         public bool isFoodExist(string foodName)
         {
             if (GetFoodByName(foodName) != null)
@@ -97,19 +105,29 @@ namespace FitnessBL.Controller
         {
             Save<Food>( File_Food_Name, ListElements);
         }
+        /// <summary>
+        /// Сохранение списка продуктов в формате xml
+        /// </summary>
         public void SaveListFoodXml()
         {
             SaveXml<Food>(File_Food_Name, ListElements);
         }
+        /// <summary>
+        /// Загрузка продуктов из файла формата xml
+        /// </summary>
+        /// <returns></returns>
         public List<Food> LoadXml()
         {
             return LoadXml<Food>(File_Food_Name);
         }
+
+        /// <summary>
+        /// Получение списка проемов пищи для текущего пользователя
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Eating> GetUserEating()
         {
             return GetUserActions();
         }
-        
-
     }
 }

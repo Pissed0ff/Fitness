@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Fitness
 {
-    public delegate void ActionDelegate(EatingController ec, UserController uc);
-    public class ConsoleAction
+    public delegate void ActionEatingDelegate(EatingController ec, UserController uc);
+    public class ConsoleEatingAction
     {
         public string Name { get; }
-        public ActionDelegate Action;
+        public ActionEatingDelegate Action;
 
-        public ConsoleAction(string name, ActionDelegate deleg)
+        public ConsoleEatingAction(string name, ActionEatingDelegate deleg)
         {
             Name = name;
             Action += deleg;

@@ -17,7 +17,7 @@ namespace FitnessBL.Model
         public double CarbohdratesPHG { get; set; }
 
         //
-        public Food() { }
+        public Food() {}
         public Food(string name)
         {
             Name = name;
@@ -30,7 +30,6 @@ namespace FitnessBL.Model
             ProteinsPHG = prots;
             FatsPHG = fats;
             CarbohdratesPHG = carb;
-
         }
     }
 }

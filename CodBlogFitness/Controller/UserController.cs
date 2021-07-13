@@ -29,6 +29,24 @@ namespace FitnessBL.Controller
                 IsNewUser = true;
             }
         }
+        public UserController(string name,
+                    Gender gender,
+                    DateTime birthDate,
+                    double weight,
+                    double height)
+        {
+            Users.Add(new User(name, gender, birthDate, weight, height));
+        }
+        public UserController()
+        { }
+
+        /// <summary>
+        /// Добавление информации для нового пользователя
+        /// </summary>
+        /// <param name="gender"></param>
+        /// <param name="birthDate"></param>
+        /// <param name="weight"></param>
+        /// <param name="height"></param>
         public void AddUserInformation(Gender gender,
                                        DateTime birthDate,
                                        double weight,
@@ -39,16 +57,11 @@ namespace FitnessBL.Controller
             if (Save<User>(File_User_Name, Users))
                 Console.WriteLine("Новый пользователь сохранен");
         }
-        public UserController(string name,
-                    Gender gender,
-                    DateTime birthDate,
-                    double weight,
-                    double height)
-        {
-            Users.Add(new User(name, gender, birthDate, weight, height));     
-        }
-        public UserController()
-        { }
+        
+        /// <summary>
+        /// Плучить массив доступных гендеров
+        /// </summary>
+        /// <returns></returns>
         public string[] GetGenders()
         {
             string[] gen = System.Enum.GetNames(typeof(FitnessBL.Model.Gender.value));

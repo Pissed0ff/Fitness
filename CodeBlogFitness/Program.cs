@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FitnessBL.Controller;
 using FitnessBL.Model;
-using FitnessBL.Controller;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
@@ -12,17 +12,37 @@ namespace Fitness
         static void Main(string[] args)
         {
             var Culture = new CultureInfo("en-us");
-            var ResourceManager = new ResourceManager("Fitness.Languages.Messages",typeof(Program).Assembly);
-            Console.WriteLine(ResourceManager.GetString("AppHello",Culture));
-              //создали пользователя
+            var ResourceManager = new ResourceManager("Fitness.Languages.Messages", typeof(Program).Assembly);
+            Console.WriteLine(ResourceManager.GetString("AppHello", Culture));
+
+            //Создали пользователя
             var userController = UserSelect();
 
-            EatingController eatingController = new EatingController(userController.CurrentUser);
-            while (true)
+            //Выбрали модуль
+            var mod = GetInt("Выберите модуль: 1 - Треннировка 2 - Прием пищи");
+            switch (mod)
             {
-                MainMenu(eatingController, userController);
-            }
+                case 1:
+                    {
+                        TrainingController trainingController = new TrainingController(userController.CurrentUser);
+                        while (true)
+                        {
+                            TrainingMenu(trainingController, userController);
+                        }
+                        break;
+                    }
 
+                case 2:
+                    {
+                        //Создали контроллер приемов пищи
+                        EatingController eatingController = new EatingController(userController.CurrentUser);
+                        while (true)
+                        {
+                            EatingMenu(eatingController, userController);
+                        }
+                        break;
+                    }
+            }
 
         }
         /// <summary>
@@ -109,65 +129,23 @@ namespace Fitness
 
         }
 
-        public static void MainMenu(EatingController eatingController, UserController userController)
+        /// <summary>
+        /// Отображение меню питания
+        /// </summary>
+        /// <param name="eatingController"></param>
+        /// <param name="userController"></param>
+        public static void EatingMenu(EatingController eatingController,
+                                    UserController userController)
         {
             //Создание словаря возможных функций
-            var actions = new Dictionary<int, ConsoleAction>();
-            actions.Add(1, new ConsoleAction("Добавить продукт", AddProductHandler));
-            actions.Add(2, new ConsoleAction("Добавить прием пищи", AddEatingHandler));
-            actions.Add(3, new ConsoleAction("Отобразить приемы пищи", ShowEatingsHandler));
-            actions.Add(4, new ConsoleAction("Сменить пользователя", ChangeUserHandler));
-
-            #region oldMenu
-            //Console.WriteLine("Доступные функции:");
-            //Console.WriteLine("1 - Добавить продукт:");
-            //Console.WriteLine("2 - Добавить прием пищи");
-            //Console.WriteLine("3 - Отобразить приемы пищи");
-            //Console.WriteLine("4 - Сменить пользователья");
-            //int action = GetInt("");
-            //switch (action)
-            //{
-            //    case 1:
-            //        {
-            //            while(true)
-            //                {
-            //                Console.WriteLine("Введите название продукта или \"Выход\" ");
-            //                string product = Console.ReadLine();
-            //                if (product != "Выход")
-            //                {
-            //                    if (eatingController.isFoodExist(product))
-            //                        Console.WriteLine("Такой продукт уже существует");
-            //                    else AddNewFood(eatingController, product);
-            //                }
-            //                else
-            //                    break;
-            //            }
-            //            break;
-            //        }
-            //    case 2:
-            //        {
-            //            string message = "Введите продукт";
-            //            bool isFirst = true;
-            //            while (AddProductToEating(eatingController, ref message, ref isFirst))
-            //            { }
-            //            break;
-            //        }
-            //    case 3:
-            //        {
-            //            ShowEatings(eatingController);
-            //            break;
-            //        }
-            //    case 4:
-            //        {
-            //            userController = UserSelect();
-            //            eatingController.ChangeUser(userController.CurrentUser);
-            //            break;
-            //        }
-            //}
-            #endregion
+            var actions = new Dictionary<int, ConsoleEatingAction>();
+            actions.Add(1, new ConsoleEatingAction("Добавить продукт", AddProductHandler));
+            actions.Add(2, new ConsoleEatingAction("Добавить прием пищи", AddEatingHandler));
+            actions.Add(3, new ConsoleEatingAction("Отобразить приемы пищи", ShowEatingsHandler));
+            actions.Add(4, new ConsoleEatingAction("Сменить пользователя", ChangeUserHandler));
 
             Console.WriteLine("Доступные функции:");
-            foreach(var el in actions)
+            foreach (var el in actions)
             {
                 Console.WriteLine(el.Key + " - " + el.Value.Name);
             }
@@ -175,7 +153,15 @@ namespace Fitness
             actions[action].Action.Invoke(eatingController, userController);
         }
 
+        #region EatingMenuActions
 
+        /// <summary>
+        /// Добавляет новый продукт в прием пищи
+        /// </summary>
+        /// <param name="ec"></param>
+        /// <param name="message"></param>
+        /// <param name="isFirst"></param>
+        /// <returns></returns>
         public static bool AddProductToEating(EatingController ec, ref string message, ref bool isFirst)
         {
             Console.WriteLine(message);
@@ -196,6 +182,10 @@ namespace Fitness
             return true;
         }
 
+        /// <summary>
+        /// Отображает прием пищи пользователя
+        /// </summary>
+        /// <param name="ec"></param>
         public static void ShowEatings(EatingController ec)
         {
             var arr = ec.GetUserEating();
@@ -212,6 +202,11 @@ namespace Fitness
             }
         }
 
+        /// <summary>
+        /// Добавляет новый продукт
+        /// </summary>
+        /// <param name="ec"></param>
+        /// <param name="product"></param>
         public static void AddNewFood(EatingController ec, string product)
         {
             int calls = GetInt("Введите каллорийность на 100г");
@@ -220,6 +215,10 @@ namespace Fitness
             int carbs = GetInt("Введите кол-во углеводов на 100г");
             ec.AddFoodElem(product, calls, fats, prots, carbs);
         }
+
+        #endregion
+
+        #region EatingMenuHandlers
         public static void AddProductHandler(EatingController eatingController, UserController userController)
         {
             while (true)
@@ -236,7 +235,6 @@ namespace Fitness
                     break;
             }
         }
-
         public static void AddEatingHandler(EatingController eatingController, UserController userController)
         {
             string message = "Введите продукт";
@@ -253,5 +251,118 @@ namespace Fitness
             userController = UserSelect();
             eatingController.ChangeUser(userController.CurrentUser);
         }
+
+        #endregion
+
+
+        public static void TrainingMenu(TrainingController trainingController,
+                                    UserController userController)
+        {
+            //Создание словаря возможных функций
+            var actions = new Dictionary<int, ConsoleTrainingAction>();
+            actions.Add(1, new ConsoleTrainingAction("Добавить упражнение", AddExerciseHandler));
+            actions.Add(2, new ConsoleTrainingAction("Добавить тренировку", AddTrainingHandler));
+            actions.Add(3, new ConsoleTrainingAction("Отобразить тренировки", ShowTrainingHandler));
+            //actions.Add(4, new ConsoleTrainingAction("Сменить пользователя", ChangeUserHandler));
+           
+
+            Console.WriteLine("Доступные функции:");
+            foreach (var el in actions)
+            {
+                Console.WriteLine(el.Key + " - " + el.Value.Name);
+            }
+            int action = GetInt("Выберите действие");
+            actions[action].Action.Invoke(trainingController, userController);
+        }
+
+        #region TrainingMenuActions
+        /// <summary>
+        /// Добавляет новое упражнение
+        /// </summary>
+        /// <param name="tc"></param>
+        /// <param name="exercise"></param>
+        public static void AddNewExercise(TrainingController tc, string exercise)
+        {
+            int calls = GetInt("Введите кол-во затраченных каллорийи за единицу");
+            tc.AddExerciseElem(exercise, calls);
+        }
+       
+        /// <summary>
+        /// Добавляет новое упражнение в тренировку
+        /// </summary>
+        /// <param name="ec"></param>
+        /// <param name="message"></param>
+        /// <param name="isFirst"></param>
+        /// <returns></returns>
+        public static bool AddExerciseToTraining(TrainingController tc, ref string message, ref bool isFirst)
+        {
+            Console.WriteLine(message);
+            string exercise = Console.ReadLine();
+            if (exercise == "Выход" && (!isFirst))
+            {
+                tc.SaveTraining();
+                return false;
+            }
+            int quantity = GetInt("Введите кол-во повторений");
+            if (!tc.AddTraining(exercise, quantity))
+            {
+                AddNewExercise(tc, exercise);
+                tc.AddTraining(exercise, quantity);
+            }
+            message = "Введите упражнение или \"Выход\" ";
+            isFirst = false;
+            return true;
+        }
+
+        /// <summary>
+        /// Отображает тренировки пользователя
+        /// </summary>
+        /// <param name="ec"></param>
+        public static void ShowTrainings(TrainingController tc)
+        {
+            var arr = tc.GetUserTrainings();
+            Console.Clear();
+            Console.WriteLine("Тренировки пользователя " + tc.GetUserName());
+            foreach (var trainingEl in arr)
+            {
+                Console.WriteLine($"-------{trainingEl.Moment}-------");
+                foreach (var exerciseEl in trainingEl.Exercises)
+                {
+                    Console.WriteLine(exerciseEl.Key.Name + " : " + exerciseEl.Value);
+                }
+                Console.WriteLine();
+            }
+        }
+        #endregion
+
+        #region TrainingControllerHandlers
+        public static void AddExerciseHandler(TrainingController trainingController, UserController userController)
+        {
+            while (true)
+            {
+                Console.WriteLine("Введите название упражнения или \"Выход\" ");
+                string exercise = Console.ReadLine();
+                if (exercise != "Выход")
+                {
+                    if (trainingController.isExerciseExist(exercise))
+                        Console.WriteLine("Такое упражнение уже существует");
+                    else AddNewExercise(trainingController, exercise);
+                }
+                else
+                    break;
+            }
+        }
+        public static void AddTrainingHandler(TrainingController trainingController, UserController userController)
+        {
+            string message = "Введите упражнение";
+            bool isFirst = true;
+            while (AddExerciseToTraining(trainingController, ref message, ref isFirst))
+            { }
+        }
+        public static void ShowTrainingHandler(TrainingController trainingController, UserController userController)
+        {
+            ShowTrainings(trainingController);
+        }
+        #endregion
     }
 }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace FitnessBL.Model
 {
     [Serializable]
-    public class Eating:BaseActions
+    public class Eating : BaseActions
     {
-        public DateTime Moment{ get; }
-        public Dictionary<Food,int> Foods { get; }
+        public DateTime Moment { get; }
+        public Dictionary<Food, int> Foods { get; }
 
-        public Eating(User user) :base(user)
+        public Eating(User user) : base(user)
         {
             Moment = DateTime.Now;
             Foods = new Dictionary<Food, int>();
