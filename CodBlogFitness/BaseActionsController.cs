@@ -13,6 +13,7 @@ namespace FitnessBL
         protected List<AC> ListActions { get; set; } // список приемов пищи или тренировок
         protected AC CurrentAction { get; set; } // текущий прием пищи или тренировка
 
+        public BaseActionsController() { }
         /// <summary>
         /// Контроллер
         /// </summary>

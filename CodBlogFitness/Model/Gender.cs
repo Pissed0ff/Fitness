@@ -9,9 +9,7 @@ namespace FitnessBL.Model
     [Serializable]
     public class Gender
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        public int Id { get; set; }
         public value gender { get; private set; }
         public enum value
         {

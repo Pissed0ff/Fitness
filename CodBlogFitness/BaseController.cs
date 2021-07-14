@@ -1,4 +1,5 @@
-﻿using FitnessBL.Model;
+﻿using FitnessBL.Controller;
+using FitnessBL.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +20,7 @@ namespace FitnessBL
 
         public BaseController() { }
 
+        protected IDataSaver Saver = new CerializeDataSaver();
         /// <summary>
         /// Сохранение списка в банарном формате
         /// </summary>
@@ -28,12 +30,8 @@ namespace FitnessBL
         /// <returns></returns>
         public bool Save<T>(string fileName, List<T> obj)
         {
-            var Formatter = new BinaryFormatter();
-            using (var fs = new FileStream(fileName, FileMode.Create))
-            {
-                Formatter.Serialize(fs, obj);
-                return true;
-            }
+            Saver.Save(fileName, obj);
+            return true;
         }
 
         /// <summary>
@@ -44,13 +42,8 @@ namespace FitnessBL
         /// <returns></returns>
         public List<T> Load<T>(string fileName)
         {
-            var Formatter = new BinaryFormatter();
-            using (var fs = new FileStream(fileName, FileMode.OpenOrCreate))
-            {
-                if (fs.Length > 0 && Formatter.Deserialize(fs) is List<T> obj)
-                    return obj;
-                else return new List<T>();
-            }
+            return Saver.Load<T>(fileName);
+            
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace FitnessBL.Model
     [Serializable]
     public class User
     {
+        public int Id { get; set; }
         public string Name { get; private set; }
         public Gender Gender { get; private set; }
         public DateTime BirthDate { get; private set; }

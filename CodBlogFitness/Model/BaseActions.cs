@@ -9,6 +9,7 @@ namespace FitnessBL.Model
     [Serializable]
     abstract public class BaseActions
     {
+        public int Id { get; set; }
         public User User { get; set; }
 
         public BaseActions(User user)
